@@ -1,0 +1,74 @@
+﻿@page
+@model EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Parent</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Parent.Id" />
+            <div class="form-group">
+                <label asp-for="Parent.Name" class="control-label"></label>
+                <input asp-for="Parent.Name" class="form-control" />
+                <span asp-validation-for="Parent.Name" class="text-danger"></span>
+            </div>
+            @foreach (var child in Model.Parent.Children)
+            {
+                await Html.RenderPartialAsync("Shared/_ChildPartialView", child);
+            }
+            <div id="newChildDiv"></div>
+            <input id="addNewChildButtonController" type="button" value="Add New Child via Controller" class="btn btn-default" data-url="@Url.Action("GetChildPartialView", "Parent")" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("Shared/_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        let requestVerificationToken = $("input[name='__RequestVerificationToken']").val();
+
+        $("#addNewChildButtonController").click(function () {
+            console.log("Controller Button clicked");
+            console.log($("#addNewChildButtonController").data("url"));
+
+            $.ajax({
+                type: "GET",
+                url: "/Parent/GetChildPartialView",
+                headers: {
+                    "RequestVerificationToken": requestVerificationToken
+                }
+            }).done(function (data, statusText, xhdr) {
+                console.log("Done");
+                $("#newChildDiv").after(data);
+            }).fail(function (xhdr, statusText, errorText) {
+                console.log("Failed");
+                $("#newChildDiv").text(JSON.stringify(xhdr));
+            });
+        });
+
+        $(document).on('click', '.deleteButton', function (e) {
+            e.preventDefault();
+            const elementToRemove = document.getElementById(e.target.id).parentNode;
+
+            // The lower the number, the faster it goes
+            jQuery(elementToRemove).fadeOut('slow', function () {
+                elementToRemove.remove();
+            });
+        });
+    </script>
+}

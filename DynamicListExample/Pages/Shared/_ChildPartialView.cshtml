@@ -1,0 +1,17 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@model Models.Child
+@* This is needed to bind the collection back to the Parent on Submit *@
+
+<div id="child-@Model.Id">
+    @using (Html.BeginCollectionItem("Parent.Children"))
+    {
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="ParentId" type="hidden" />
+        <button id="deleteChild-@Model.Id" type="button" class="btn btn-danger deleteButton">Delete Child</button>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    }
+</div>

@@ -1,0 +1,42 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Parent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Parent.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Parent.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Parent.Children)
+        </dt>
+        @* This doesn't render perfectly, but the data is there *@
+        <dd>
+            <dl>
+                @foreach (var child in Model.Parent.Children)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => child.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => child.Name)
+                    </dd>
+                }
+            </dl>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Parent.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
