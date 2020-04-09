@@ -62,7 +62,6 @@
             e.preventDefault();
             const elementToRemove = document.getElementById(e.target.id).parentNode;
 
-            // The lower the number, the faster it goes
             jQuery(elementToRemove).fadeOut('slow', function () {
                 elementToRemove.remove();
             });
